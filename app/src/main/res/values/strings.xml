@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">AiLaTrieuPhu</string>
+    <string name="start_time_count">90</string>
+    <string name="lever_one">1</string>
 </resources>

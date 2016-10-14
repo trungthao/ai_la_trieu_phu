@@ -11,7 +11,6 @@ import android.view.animation.Animation;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.uet.trungthao.ailatrieuphu.Common.CommonVLs;
 import com.uet.trungthao.ailatrieuphu.animation.MyAnimation;
@@ -24,6 +23,7 @@ import com.uet.trungthao.ailatrieuphu.model.Question;
 public class MainActivity extends Activity {
 
     private static final long TIME_SLEEP = 1000;
+    private static final int START_TIME_COUNT = 90;
     private final String backgroudLevelColor = "#FF9800";
     private final String transparentLevelColor = "#07000000";
     private final String importantLevelColor = "#4CAF50";
@@ -33,6 +33,7 @@ public class MainActivity extends Activity {
     private TextView tvCau1, tvCau2, tvCau3, tvCau4, tvCau5, tvCau6, tvCau7, tvCau8, tvCau9, tvCau10, tvCau11, tvCau12, tvCau13, tvCau14, tvCau15;
     private ImageView ivFifty, ivAudience, ivRelative, ivChangeQuestion;
     private boolean isClickFifty, isClickAudience, isClickchangeQuestion, isClickRelative;
+    private TextView tvTime;
 
     AnimListenerWhenSelectTrue listenSelectTrue;
     AnimListenerWhenSelectFalse listenSelectFalse;
@@ -40,6 +41,8 @@ public class MainActivity extends Activity {
     private boolean isSelect;
     private GameHelper gameHelper;
     private MyAnimation myAnim;
+    private int time;
+    private boolean stop;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +50,7 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
         addController();
         addEvent();
+        countTime();
         newGame(gameHelper.getFirstQuestion());
     }
 
@@ -61,6 +65,8 @@ public class MainActivity extends Activity {
         rlCaseB = (RelativeLayout) findViewById(R.id.rl_case_b);
         rlCaseC = (RelativeLayout) findViewById(R.id.rl_case_c);
         rlCaseD = (RelativeLayout) findViewById(R.id.rl_case_d);
+
+        tvTime = (TextView) findViewById(R.id.tv_time);
 
         tvCau1 = (TextView) findViewById(R.id.tv_cau1);
         tvCau2 = (TextView) findViewById(R.id.tv_cau2);
@@ -87,9 +93,12 @@ public class MainActivity extends Activity {
         myAnim = new MyAnimation(getApplicationContext());
         listenSelectTrue = new AnimListenerWhenSelectTrue();
         listenSelectFalse = new AnimListenerWhenSelectFalse();
+
+        time = START_TIME_COUNT;
     }
 
     public void newGame(Question questionFirst) {
+        time = START_TIME_COUNT;
         setColorForNewGame();
         setQuestion(questionFirst);
     }
@@ -131,7 +140,6 @@ public class MainActivity extends Activity {
                     isClickAudience = true;
                     ivAudience.setImageResource(R.drawable.hoikhangia1);
                     int percentArr[] = gameHelper.audienceHelper();
-                    Bundle bundle = new Bundle();
                     Intent intent = new Intent(MainActivity.this, AudienceHelpActivity.class);
                     intent.putExtra("percentArr", percentArr);
                     startActivity(intent);
@@ -146,21 +154,9 @@ public class MainActivity extends Activity {
                     ivRelative.setImageResource(R.drawable.nguoithan2);
                     isClickRelative = true;
                     int caseRelative = gameHelper.relativeHelper();
-//                    startActivity(new Intent(MainActivity.this, RelativeActivity.class));
-                    switch (caseRelative) {
-                        case CommonVLs.CASE_A:
-                            Toast.makeText(getApplicationContext(), "A", Toast.LENGTH_SHORT).show();
-                            break;
-                        case CommonVLs.CASE_B:
-                            Toast.makeText(getApplicationContext(), "B", Toast.LENGTH_SHORT).show();
-                            break;
-                        case CommonVLs.CASE_C:
-                            Toast.makeText(getApplicationContext(), "C", Toast.LENGTH_SHORT).show();
-                            break;
-                        case CommonVLs.CASE_D:
-                            Toast.makeText(getApplicationContext(), "D", Toast.LENGTH_SHORT).show();
-                            break;
-                    }
+                    Intent mIntent = new Intent(MainActivity.this, RelativeActivity.class);
+                    mIntent.putExtra("caseRelative", caseRelative);
+                    startActivity(mIntent);
                 }
             }
         });
@@ -187,10 +183,12 @@ public class MainActivity extends Activity {
                                 e.printStackTrace();
                             }
 
+                            // NGười chơi chọn đúng đáp án
                             if (gameHelper.checkTrueCase(caseSelect)) {
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
+                                        stop = true;
                                         // change image select true
                                         rlCase.setBackgroundResource(R.drawable.selecttrue);
                                         // animation fade in when select true
@@ -204,16 +202,16 @@ public class MainActivity extends Activity {
                                     public void run() {
                                         RelativeLayout rlCaseTrue = null;
                                         switch (gameHelper.getTrueCase()) {
-                                            case CommonVLs.CASE_A :
+                                            case CommonVLs.CASE_A:
                                                 rlCaseTrue = rlCaseA;
                                                 break;
-                                            case CommonVLs.CASE_B :
+                                            case CommonVLs.CASE_B:
                                                 rlCaseTrue = rlCaseB;
                                                 break;
-                                            case CommonVLs.CASE_C :
+                                            case CommonVLs.CASE_C:
                                                 rlCaseTrue = rlCaseC;
                                                 break;
-                                            case CommonVLs.CASE_D :
+                                            case CommonVLs.CASE_D:
                                                 rlCaseTrue = rlCaseD;
                                                 break;
                                         }
@@ -242,6 +240,8 @@ public class MainActivity extends Activity {
         public void onAnimationEnd(Animation animation) {
             setColorLevel(gameHelper.getLevel());
             setQuestion(gameHelper.getNextQuestion());
+            time = START_TIME_COUNT;
+            stop = false;
             setColorDefaultForCase();
         }
 
@@ -250,6 +250,39 @@ public class MainActivity extends Activity {
 
         }
     }
+
+    private void countTime() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (time > 0) {
+                    try {
+                        Thread.sleep(TIME_SLEEP);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    if (!stop) {
+                        time--;
+                    }
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            tvTime.setText(time + "");
+                        }
+                    });
+                }
+                if (time <= 0) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            questionPlayContinueDialog();
+                        }
+                    });
+                }
+            }
+        }).start();
+    }
+
     private class AnimListenerWhenSelectFalse implements Animation.AnimationListener {
 
         @Override
@@ -259,23 +292,7 @@ public class MainActivity extends Activity {
 
         @Override
         public void onAnimationEnd(Animation animation) {
-            AlertDialog dialog = new AlertDialog.Builder(MainActivity.this)
-                    .setMessage("Bạn có muốn chơi lại không???")
-                    .setNegativeButton("Có", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            newGame(gameHelper.getFirstQuestion());
-                        }
-                    })
-                    .setPositiveButton("Không", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-
-                            finish();
-                        }
-                    })
-                    .create();
-            dialog.show();
+            questionPlayContinueDialog();
         }
 
         @Override
@@ -284,12 +301,31 @@ public class MainActivity extends Activity {
         }
     }
 
+    private void questionPlayContinueDialog() {
+        AlertDialog dialog = new AlertDialog.Builder(MainActivity.this)
+                .setMessage("Bạn có muốn chơi lại không???")
+                .setNegativeButton("Có", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        newGame(gameHelper.getFirstQuestion());
+                        countTime();
+                    }
+                })
+                .setPositiveButton("Không", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        finish();
+                    }
+                }).create();
+        dialog.show();
+    }
+
     private void setQuestion(Question question) {
         tvQuestion.setText(question.getQuestion());
-        tvCaseA.setText(question.getCaseA());
-        tvCaseB.setText(question.getCaseB());
-        tvCaseC.setText(question.getCaseC());
-        tvCaseD.setText(question.getCaseD());
+        tvCaseA.setText("A. " + question.getCaseA());
+        tvCaseB.setText("B. " + question.getCaseB());
+        tvCaseC.setText("C. " + question.getCaseC());
+        tvCaseD.setText("D. " + question.getCaseD());
     }
 
     public void setColorForNewGame() {

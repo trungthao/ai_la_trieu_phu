@@ -1,6 +1,7 @@
 package com.uet.trungthao.ailatrieuphu;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -13,31 +14,38 @@ import android.widget.Toast;
 public class RelativeActivity extends Activity {
 
     private ImageView ivBanThan, ivBanDeu, ivBoBich, ivHangXom, ivNguoiNha, ivDongNghiep;
+    private int caseRelative;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_relative);
 
+        Intent mIntent = getIntent();
+        caseRelative = mIntent.getIntExtra("caseRelative", 0);
         addController();
         addEvents();
     }
 
     private void addEvents() {
-        chooseRelative(ivBanThan);
-        chooseRelative(ivBoBich);
-        chooseRelative(ivBanDeu);
-        chooseRelative(ivNguoiNha);
-        chooseRelative(ivHangXom);
-        chooseRelative(ivDongNghiep);
+        chooseRelative(ivBanThan, "Bạn thân");
+        chooseRelative(ivBoBich, "Bồ bịch");
+        chooseRelative(ivBanDeu, "Bạn đểu");
+        chooseRelative(ivNguoiNha, "Người nhà");
+        chooseRelative(ivHangXom, "Hàng xóm");
+        chooseRelative(ivDongNghiep, "Đồng nghiệp");
     }
 
 
-    private void chooseRelative(ImageView ivBanDeu) {
-        ivBanDeu.setOnClickListener(new View.OnClickListener() {
+    private void chooseRelative(ImageView ivRelative, final String nameRelative) {
+        ivRelative.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 // TODO: xu ly chon nguoi than, tam thoi de Toat dap an
+                Intent mIntent = new Intent(RelativeActivity.this, ShowCaseRelativeActivity.class);
+                mIntent.putExtra("nameRelative", nameRelative);
+                mIntent.putExtra("caseRelative", caseRelative);
+                startActivity(mIntent);
                 finish();
             }
         });

@@ -25,6 +25,8 @@
             android:screenOrientation="landscape"/>
         <activity android:name=".RelativeActivity"
             android:screenOrientation="landscape"/>
+        <activity android:name=".ShowCaseRelativeActivity"
+            android:screenOrientation="landscape"/>
     </application>
 
 </manifest>

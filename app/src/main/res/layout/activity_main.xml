@@ -11,13 +11,13 @@
         android:background="@drawable/thoigian">
 
         <TextView
-            android:id="@+id/tv_thoi_gian"
+            android:id="@+id/tv_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="15"
-            android:textColor="#fff"
-            android:textSize="20sp" />
+            android:text="@string/start_time_count"
+            android:textColor="@color/white"
+            android:textSize="@dimen/time_count" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -76,7 +76,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Câu 1: , hôm nay có gì vui khôngdfsdfhsdjfjsdhfjkshdjfjdhfjsdhfjshdfhsdjfhjsdhfjksdhfjsdhfjkhsdjkfhjsdhfjksdh"
-                android:textColor="#fff" />
+                android:textColor="@color/white" />
         </RelativeLayout>
 
         <LinearLayout
@@ -99,7 +99,7 @@
                     android:layout_height="wrap_content"
                     android:text="A. dsfjkjsdfkjsdjflkds"
                     android:layout_centerInParent="true"
-                    android:textColor="#fff" />
+                    android:textColor="@color/white" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -115,7 +115,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     android:text="A. dsfjkjsdfkjsdjflkds"
-                    android:textColor="#fff" />
+                    android:textColor="@color/white" />
             </RelativeLayout>
         </LinearLayout>
 
@@ -139,7 +139,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     android:text="A. dsfjkjsdfkjsdjflkds"
-                    android:textColor="#fff" />
+                    android:textColor="@color/white" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -155,7 +155,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     android:text="A. dsfjkjsdfkjsdjflkds"
-                    android:textColor="#fff" />
+                    android:textColor="@color/white" />
             </RelativeLayout>
         </LinearLayout>
     </LinearLayout>
@@ -177,7 +177,7 @@
             android:background="@android:color/holo_green_dark"
             android:gravity="center"
             android:text="15"
-            android:textColor="#fff" />
+            android:textColor="@color/white" />
 
         <TextView
             android:id="@+id/tv_cau14"
@@ -186,7 +186,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="14"
-            android:textColor="#fff" />
+            android:textColor="@color/white" />
 
         <TextView
             android:id="@+id/tv_cau13"
@@ -195,7 +195,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="13"
-            android:textColor="#fff" />
+            android:textColor="@color/white" />
 
         <TextView
             android:id="@+id/tv_cau12"
@@ -204,7 +204,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="12"
-            android:textColor="#fff" />
+            android:textColor="@color/white" />
 
         <TextView
             android:id="@+id/tv_cau11"
@@ -213,7 +213,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="11"
-            android:textColor="#fff" />
+            android:textColor="@color/white" />
 
         <TextView
             android:id="@+id/tv_cau10"
@@ -223,7 +223,7 @@
             android:background="@android:color/holo_green_dark"
             android:gravity="center"
             android:text="10"
-            android:textColor="#fff" />
+            android:textColor="@color/white" />
 
         <TextView
             android:id="@+id/tv_cau9"
@@ -232,7 +232,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="9"
-            android:textColor="#fff" />
+            android:textColor="@color/white" />
 
         <TextView
             android:id="@+id/tv_cau8"
@@ -241,7 +241,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="8"
-            android:textColor="#fff" />
+            android:textColor="@color/white" />
 
         <TextView
             android:id="@+id/tv_cau7"
@@ -250,7 +250,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="7"
-            android:textColor="#fff" />
+            android:textColor="@color/white" />
 
         <TextView
             android:id="@+id/tv_cau6"
@@ -259,7 +259,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="6"
-            android:textColor="#fff" />
+            android:textColor="@color/white" />
 
         <TextView
             android:id="@+id/tv_cau5"
@@ -269,7 +269,7 @@
             android:background="@android:color/holo_green_dark"
             android:gravity="center"
             android:text="5"
-            android:textColor="#fff" />
+            android:textColor="@color/white" />
 
         <TextView
             android:id="@+id/tv_cau4"
@@ -278,7 +278,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="4"
-            android:textColor="#fff" />
+            android:textColor="@color/white" />
 
         <TextView
             android:id="@+id/tv_cau3"
@@ -287,7 +287,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="3"
-            android:textColor="#fff" />
+            android:textColor="@color/white" />
 
         <TextView
             android:id="@+id/tv_cau2"
@@ -296,7 +296,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="2"
-            android:textColor="#fff" />
+            android:textColor="@color/white" />
 
         <TextView
             android:id="@+id/tv_cau1"
@@ -304,8 +304,8 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="1"
-            android:textColor="#fff" />
+            android:text="@string/lever_one"
+            android:textColor="@color/white" />
 
     </LinearLayout>
 
