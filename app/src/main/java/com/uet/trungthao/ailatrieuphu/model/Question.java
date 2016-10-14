@@ -1,10 +1,12 @@
 package com.uet.trungthao.ailatrieuphu.model;
 
+import java.io.Serializable;
+
 /**
  * Created by JiH on 11/10/2016.
  */
 
-public class Question {
+public class Question implements Serializable{
     private String question;
     private String caseA, caseB, caseC, caseD;
     private int trueCase;

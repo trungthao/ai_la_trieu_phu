@@ -42,7 +42,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public void createDatabase() throws IOException {
         boolean dbExists = checkDatabase();
-        if (!dbExists) {
+        if (dbExists) {} else {
             this.getReadableDatabase();
             copyDatabase();
         }
@@ -129,6 +129,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         , cursor.getString(caseDIndex)
         , cursor.getInt(trueCaseIndex));
 
+        db.close();
         return question;
     }
 }

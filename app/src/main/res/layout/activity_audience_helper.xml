@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/darker_gray"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <RelativeLayout
+            android:layout_centerHorizontal="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:id="@+id/ln_column_a"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tv_percent_a"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="100%"
+                    android:textSize="16sp"
+                    android:gravity="center_horizontal" />
+
+                <TextView
+                    android:id="@+id/tv_column_a"
+                    android:layout_width="50dp"
+                    android:layout_height="400dp"
+                    android:background="@android:color/holo_blue_dark" />
+
+                <TextView
+                    android:id="@+id/tv_case_a"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="A"
+                    android:textColor="@color/white"
+                    android:textSize="24sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ln_column_b"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_marginLeft="16dp"
+                android:layout_toRightOf="@id/ln_column_a"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tv_percent_b"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="100%"
+                    android:textSize="16sp"
+                    android:gravity="center_horizontal" />
+
+                <TextView
+                    android:id="@+id/tv_column_b"
+                    android:layout_width="50dp"
+                    android:layout_height="400dp"
+
+                    android:background="@android:color/holo_blue_dark" />
+
+                <TextView
+                    android:id="@+id/tv_case_b"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="B"
+                    android:textColor="@color/white"
+                    android:textSize="24sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ln_column_c"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_marginLeft="16dp"
+                android:layout_toRightOf="@id/ln_column_b"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tv_percent_c"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="100%"
+                    android:textSize="16sp"
+                    android:gravity="center_horizontal" />
+
+                <TextView
+                    android:id="@+id/tv_column_c"
+                    android:layout_width="50dp"
+                    android:layout_height="400dp"
+
+                    android:background="@android:color/holo_blue_dark" />
+
+                <TextView
+                    android:id="@+id/tv_case_c"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="C"
+                    android:textColor="@color/white"
+                    android:textSize="24sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ln_column_d"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_marginLeft="16dp"
+                android:layout_toRightOf="@id/ln_column_c"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tv_percent_d"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="100%"
+                    android:textSize="16sp"
+                    android:gravity="center_horizontal" />
+
+                <TextView
+                    android:id="@+id/tv_column_d"
+                    android:layout_width="50dp"
+                    android:layout_height="400dp"
+
+                    android:background="@android:color/holo_blue_dark" />
+
+                <TextView
+                    android:id="@+id/tv_case_d"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="D"
+                    android:textColor="@color/white"
+                    android:textSize="24sp" />
+            </LinearLayout>
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/iv_continue"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:src="@drawable/continute" />
+</LinearLayout>

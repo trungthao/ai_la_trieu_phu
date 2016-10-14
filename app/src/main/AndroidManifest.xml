@@ -9,7 +9,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen">
         <activity
-            android:name=".MainActivity"
+            android:name=".SlashActivity"
             android:screenOrientation="landscape">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -17,6 +17,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".MainActivity"
+            android:screenOrientation="landscape" />
+
+        <activity android:name=".AudienceHelpActivity"
+            android:screenOrientation="landscape"/>
+        <activity android:name=".RelativeActivity"
+            android:screenOrientation="landscape"/>
     </application>
 
 </manifest>
