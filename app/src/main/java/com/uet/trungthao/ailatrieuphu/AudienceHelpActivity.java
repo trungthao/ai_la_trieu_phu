@@ -57,16 +57,16 @@ public class AudienceHelpActivity extends Activity {
         ViewGroup.LayoutParams lp;
 
         lp = tvColumnA.getLayoutParams();
-        lp.height = heightColumnA * 5;
+        lp.height = heightColumnA * 4;
 
         lp = tvColumnB.getLayoutParams();
-        lp.height = heightColumnB * 5;
+        lp.height = heightColumnB * 4;
 
         lp = tvColumnC.getLayoutParams();
-        lp.height = heightColumnC * 5;
+        lp.height = heightColumnC * 4;
 
         lp = tvColumnD.getLayoutParams();
-        lp.height = heightColumnD * 5;
+        lp.height = heightColumnD * 4;
 
         tvColumnA.requestLayout();
         tvColumnB.requestLayout();

@@ -4,17 +4,22 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.uet.trungthao.ailatrieuphu.Common.CommonVLs;
 import com.uet.trungthao.ailatrieuphu.animation.MyAnimation;
 import com.uet.trungthao.ailatrieuphu.model.Question;
+
+import java.util.Random;
 
 /**
  * Created by JiH on 13/10/2016.
@@ -24,6 +29,8 @@ public class MainActivity extends Activity {
 
     private static final long TIME_SLEEP = 1000;
     private static final int START_TIME_COUNT = 90;
+    private static final int DELAY_AUDIO_TIME = 300;
+    private static final String TAG = MainActivity.class.getSimpleName();
     private final String backgroudLevelColor = "#FF9800";
     private final String transparentLevelColor = "#07000000";
     private final String importantLevelColor = "#4CAF50";
@@ -37,6 +44,8 @@ public class MainActivity extends Activity {
 
     AnimListenerWhenSelectTrue listenSelectTrue;
     AnimListenerWhenSelectFalse listenSelectFalse;
+
+    private MediaPlayer mediaPlayer;
 
     private boolean isSelect;
     private GameHelper gameHelper;
@@ -98,8 +107,14 @@ public class MainActivity extends Activity {
     }
 
     public void newGame(Question questionFirst) {
+        stop = false;
         time = START_TIME_COUNT;
         setColorForNewGame();
+        mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.hoi1);
+        if (mediaPlayer.isPlaying()) {
+            mediaPlayer.stop();
+        }
+        mediaPlayer.start();
         setQuestion(questionFirst);
     }
 
@@ -114,10 +129,16 @@ public class MainActivity extends Activity {
         ivFifty.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!isClickFifty) {
+                if (!isClickFifty && !isSelect) {
                     ivFifty.setImageResource(R.drawable.nammuoi2);
-                    setQuestion(gameHelper.fiftyHelper());
                     isClickFifty = true;
+                    if (mediaPlayer.isPlaying()) {
+                        mediaPlayer.stop();
+                    }
+                    mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.nammuoi);
+                    mediaPlayer.start();
+                    while (mediaPlayer.getCurrentPosition() < mediaPlayer.getDuration() - DELAY_AUDIO_TIME);
+                    setQuestion(gameHelper.fiftyHelper());
                 }
             }
         });
@@ -125,10 +146,13 @@ public class MainActivity extends Activity {
         ivChangeQuestion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!isClickchangeQuestion) {
+                if (!isClickchangeQuestion && !isSelect) {
                     ivChangeQuestion.setImageResource(R.drawable.doicauhoi2);
-                    setQuestion(gameHelper.getNextQuestion());
                     isClickchangeQuestion = true;
+                    if (mediaPlayer.isPlaying()) {
+                        mediaPlayer.stop();
+                    }
+                    setQuestion(gameHelper.getNextQuestion());
                 }
             }
         });
@@ -136,12 +160,18 @@ public class MainActivity extends Activity {
         ivAudience.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!isClickAudience) {
+                if (!isClickAudience && !isSelect) {
                     isClickAudience = true;
                     ivAudience.setImageResource(R.drawable.hoikhangia1);
                     int percentArr[] = gameHelper.audienceHelper();
                     Intent intent = new Intent(MainActivity.this, AudienceHelpActivity.class);
                     intent.putExtra("percentArr", percentArr);
+                    if (mediaPlayer.isPlaying()) {
+                        mediaPlayer.stop();
+                    }
+                    mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.khangia);
+                    mediaPlayer.start();
+                    while (mediaPlayer.getCurrentPosition() < mediaPlayer.getDuration() - DELAY_AUDIO_TIME);
                     startActivity(intent);
                 }
             }
@@ -150,12 +180,18 @@ public class MainActivity extends Activity {
         ivRelative.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!isClickRelative) {
+                if (!isClickRelative && !isSelect) {
                     ivRelative.setImageResource(R.drawable.nguoithan2);
                     isClickRelative = true;
                     int caseRelative = gameHelper.relativeHelper();
                     Intent mIntent = new Intent(MainActivity.this, RelativeActivity.class);
                     mIntent.putExtra("caseRelative", caseRelative);
+                    if (mediaPlayer.isPlaying()) {
+                        mediaPlayer.stop();
+                    }
+                    mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.goinguoithan);
+                    mediaPlayer.start();
+                    while (mediaPlayer.getCurrentPosition() < mediaPlayer.getDuration() - DELAY_AUDIO_TIME);
                     startActivity(mIntent);
                 }
             }
@@ -166,25 +202,92 @@ public class MainActivity extends Activity {
         rlCase.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 // Kiem tra xem da chon dap an chua
-                if (!isSelect) {
-                    // set background image when select
+                if (!isSelect && !isSelect) {
+                    // thay đổi nền đáp án đã chọn
                     rlCase.setBackgroundResource(R.drawable.select);
-                    // set seleted
+                    stop = true;
+                    // dừng nếu nhạc đang phát
+                    // chọn nhạc để phát khi người đã chọn đáp án
+                    switch (caseSelect) {
+                        case CommonVLs.CASE_A:
+                            mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.da);
+                            break;
+                        case CommonVLs.CASE_B:
+                            mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.db);
+                            break;
+                        case CommonVLs.CASE_C:
+                            mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.dc);
+                            break;
+                        case CommonVLs.CASE_D:
+                            mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.dd);
+                            break;
+                    }
+                    if (mediaPlayer.isPlaying()) {
+                        mediaPlayer.stop();
+                    }
+                    // phát nhạc chọn đáp án
+                    mediaPlayer.start();
+
+                    // thiết lập là đã có đáp án được chọn, không cho chọn thêm
                     isSelect = true;
                     // kiem tra dap an dung hay sai
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
-                            // Tam dung de tao hoi hop
-                            try {
-                                Thread.sleep(TIME_SLEEP);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
+                            // Tam dung de phat nhac, tạo hồi hộp
+                            while (mediaPlayer.getCurrentPosition() <= mediaPlayer.getDuration()-DELAY_AUDIO_TIME);
+                            // phát nhạc đưa ra đáp án
+                            if (new Random().nextInt(2) == 0) {
+                                mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.now1);
+                            } else {
+                                mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.now2);
                             }
-
+                            if (mediaPlayer.isPlaying()) {
+                                mediaPlayer.stop();
+                            }
+                            mediaPlayer.start();
+                            while (mediaPlayer.getCurrentPosition() <= mediaPlayer.getDuration()-DELAY_AUDIO_TIME);
                             // NGười chơi chọn đúng đáp án
                             if (gameHelper.checkTrueCase(caseSelect)) {
+                                mediaPlayer.stop();
+                                switch (caseSelect) {
+                                    case CommonVLs.CASE_A:
+                                        mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.true_a);
+                                        break;
+                                    case CommonVLs.CASE_B:
+                                        mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.true_b);
+                                        break;
+                                    case CommonVLs.CASE_C:
+                                        mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.true_c);
+                                        break;
+                                    case CommonVLs.CASE_D:
+                                        mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.true_d);
+                                        break;
+                                }
+                                if (mediaPlayer.isPlaying()) {
+                                    mediaPlayer.stop();
+                                }
+                                mediaPlayer.start();
+                                if (gameHelper.getLevel() == 14) {
+                                    while (mediaPlayer.getCurrentPosition() < mediaPlayer.getDuration() - DELAY_AUDIO_TIME);
+                                    mediaPlayer.stop();
+                                    mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.pass_14);
+                                    if (mediaPlayer.isPlaying()) {
+                                        mediaPlayer.stop();
+                                    }
+                                    mediaPlayer.start();
+                                }
+                                if (gameHelper.getLevel() == 15) {
+                                    while (mediaPlayer.getCurrentPosition() < mediaPlayer.getDuration() - DELAY_AUDIO_TIME);
+                                    mediaPlayer.stop();
+                                    mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.pass_15);
+                                    if (mediaPlayer.isPlaying()) {
+                                        mediaPlayer.stop();
+                                    }
+                                    mediaPlayer.start();
+                                }
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
@@ -195,8 +298,9 @@ public class MainActivity extends Activity {
                                         myAnim.fadeIn(listenSelectTrue, rlCase);
                                     }
                                 });
-                            } else {
-                                // TODO: xu ly khi chon sai dap an
+                            }
+                            // Người chơi chọn sai đáp án
+                            else {
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
@@ -215,6 +319,24 @@ public class MainActivity extends Activity {
                                                 rlCaseTrue = rlCaseD;
                                                 break;
                                         }
+                                        switch (gameHelper.getTrueCase()) {
+                                            case CommonVLs.CASE_A:
+                                                mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.lose_a);
+                                                break;
+                                            case CommonVLs.CASE_B:
+                                                mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.lose_b);
+                                                break;
+                                            case CommonVLs.CASE_C:
+                                                mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.lose_c);
+                                                break;
+                                            case CommonVLs.CASE_D:
+                                                mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.lose_d);
+                                                break;
+                                        }
+                                        if (mediaPlayer.isPlaying()) {
+                                            mediaPlayer.stop();
+                                        }
+                                        mediaPlayer.start();
                                         rlCase.setBackgroundResource(R.drawable.selectfalse);
                                         rlCaseTrue.setBackgroundResource(R.drawable.selecttrue);
                                         myAnim.fadeIn(listenSelectFalse, rlCaseTrue);
@@ -239,10 +361,55 @@ public class MainActivity extends Activity {
         @Override
         public void onAnimationEnd(Animation animation) {
             setColorLevel(gameHelper.getLevel());
+            setColorDefaultForCase();
+            if (mediaPlayer.isPlaying()) {
+                mediaPlayer.stop();
+            }
             setQuestion(gameHelper.getNextQuestion());
+            Toast.makeText(getApplicationContext(), gameHelper.getTrueCase() + "", Toast.LENGTH_SHORT).show();
+            switch (gameHelper.getLevel()) {
+                case 1: mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.hoi1);
+                    break;
+                case 2: mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.hoi2);
+                    break;
+                case 3: mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.hoi3);
+                    break;
+                case 4: mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.hoi4);
+                    break;
+                case 5: mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.hoi5);
+                    break;
+                case 6: mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.hoi6);
+                    break;
+                case 7: mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.hoi7);
+                    break;
+                case 8: mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.hoi8);
+                    break;
+                case 9: mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.hoi9);
+                    break;
+                case 10: mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.hoi10);
+                    break;
+                case 11: mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.hoi11);
+                    break;
+                case 12: mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.hoi12);
+                    break;
+                case 13: mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.hoi13);
+                    break;
+                case 14: mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.hoi14);
+                    break;
+                case 15: mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.hoi15);
+                    break;
+            }
+            mediaPlayer.start();
+            if (gameHelper.getLevel() == 5 || gameHelper.getLevel() == 10) {
+                while (mediaPlayer.getCurrentPosition() < mediaPlayer.getDuration() - DELAY_AUDIO_TIME);
+                if (mediaPlayer.isPlaying()) {
+                    mediaPlayer.stop();
+                }
+                mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.quantrong);
+                mediaPlayer.start();
+            }
             time = START_TIME_COUNT;
             stop = false;
-            setColorDefaultForCase();
         }
 
         @Override
@@ -302,13 +469,16 @@ public class MainActivity extends Activity {
     }
 
     private void questionPlayContinueDialog() {
+        stop = true;
         AlertDialog dialog = new AlertDialog.Builder(MainActivity.this)
                 .setMessage("Bạn có muốn chơi lại không???")
                 .setNegativeButton("Có", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         newGame(gameHelper.getFirstQuestion());
-                        countTime();
+                        if (time <= 0) {
+                            countTime();
+                        }
                     }
                 })
                 .setPositiveButton("Không", new DialogInterface.OnClickListener() {

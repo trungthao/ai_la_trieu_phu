@@ -1,9 +1,10 @@
 package com.uet.trungthao.ailatrieuphu;
 
 import android.content.Intent;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
+import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.widget.ImageView;
@@ -11,7 +12,7 @@ import android.widget.RelativeLayout;
 
 import com.uet.trungthao.ailatrieuphu.animation.MyAnimation;
 
-public class SlashActivity extends AppCompatActivity implements Animation.AnimationListener{
+public class SlashActivity extends AppCompatActivity implements Animation.AnimationListener {
 
     private static final String TAG = SlashActivity.class.getSimpleName();
     RelativeLayout rlFirstScreen, rlSecondScreen;
@@ -53,6 +54,9 @@ public class SlashActivity extends AppCompatActivity implements Animation.Animat
         ivNewGame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Log.i(TAG, "start");
+                MediaPlayer mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.chungta);
+                mediaPlayer.start();
                 myAnim.move(rlFirstScreen, rlSecondScreen, SlashActivity.this);
             }
         });
