@@ -1,4 +1,4 @@
-package com.uet.trungthao.ailatrieuphu.Common;
+package com.uet.trungthao.ailatrieuphu.common;
 
 /**
  * Created by JiH on 12/10/2016.

@@ -32,24 +32,4 @@ public class MyAnimation {
             views[i].startAnimation(animFadeIn);
         }
     }
-
-//    public void setAnimMove1(Animation animMove1) {
-//        this.animMove1 = animMove1;
-//    }
-//
-//    public Animation getAnimMove2() {
-//        return animMove2;
-//    }
-//
-//    public void setAnimMove2(Animation animMove2) {
-//        this.animMove2 = animMove2;
-//    }
-//
-//    public Animation getAnimFadeIn() {
-//        return animFadeIn;
-//    }
-//
-//    public void setAnimFadeIn(Animation animFadeIn) {
-//        this.animFadeIn = animFadeIn;
-//    }
 }

@@ -3,22 +3,25 @@ package com.uet.trungthao.ailatrieuphu;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.uet.trungthao.ailatrieuphu.Common.CommonVLs;
 import com.uet.trungthao.ailatrieuphu.animation.MyAnimation;
+import com.uet.trungthao.ailatrieuphu.common.CommonVLs;
+import com.uet.trungthao.ailatrieuphu.activity_helper.AudienceHelpActivity;
+import com.uet.trungthao.ailatrieuphu.class_helper.GameHelper;
+import com.uet.trungthao.ailatrieuphu.activity_helper.RelativeActivity;
 import com.uet.trungthao.ailatrieuphu.model.Question;
 
+import java.util.Arrays;
 import java.util.Random;
 
 /**
@@ -29,7 +32,7 @@ public class MainActivity extends Activity {
 
     private static final long TIME_SLEEP = 1000;
     private static final int START_TIME_COUNT = 90;
-    private static final int DELAY_AUDIO_TIME = 300;
+    private static final int DELAY_AUDIO_TIME = 700;
     private static final String TAG = MainActivity.class.getSimpleName();
     private final String backgroudLevelColor = "#FF9800";
     private final String transparentLevelColor = "#07000000";
@@ -45,6 +48,8 @@ public class MainActivity extends Activity {
     AnimListenerWhenSelectTrue listenSelectTrue;
     AnimListenerWhenSelectFalse listenSelectFalse;
 
+    private String namePlayer;
+
     private MediaPlayer mediaPlayer;
 
     private boolean isSelect;
@@ -52,6 +57,7 @@ public class MainActivity extends Activity {
     private MyAnimation myAnim;
     private int time;
     private boolean stop;
+    private SharedPreferences pref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +67,8 @@ public class MainActivity extends Activity {
         addEvent();
         countTime();
         newGame(gameHelper.getFirstQuestion());
+        Intent mIntent = getIntent();
+        namePlayer = mIntent.getStringExtra("name");
     }
 
     private void addController() {
@@ -111,9 +119,6 @@ public class MainActivity extends Activity {
         time = START_TIME_COUNT;
         setColorForNewGame();
         mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.hoi1);
-        if (mediaPlayer.isPlaying()) {
-            mediaPlayer.stop();
-        }
         mediaPlayer.start();
         setQuestion(questionFirst);
     }
@@ -132,13 +137,19 @@ public class MainActivity extends Activity {
                 if (!isClickFifty && !isSelect) {
                     ivFifty.setImageResource(R.drawable.nammuoi2);
                     isClickFifty = true;
-                    if (mediaPlayer.isPlaying()) {
-                        mediaPlayer.stop();
-                    }
-                    mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.nammuoi);
-                    mediaPlayer.start();
-                    while (mediaPlayer.getCurrentPosition() < mediaPlayer.getDuration() - DELAY_AUDIO_TIME);
-                    setQuestion(gameHelper.fiftyHelper());
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            createNewMedia(R.raw.nammuoi);
+                            delay();
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    setQuestion(gameHelper.fiftyHelper());
+                                }
+                            });
+                        }
+                    }).start();
                 }
             }
         });
@@ -149,9 +160,6 @@ public class MainActivity extends Activity {
                 if (!isClickchangeQuestion && !isSelect) {
                     ivChangeQuestion.setImageResource(R.drawable.doicauhoi2);
                     isClickchangeQuestion = true;
-                    if (mediaPlayer.isPlaying()) {
-                        mediaPlayer.stop();
-                    }
                     setQuestion(gameHelper.getNextQuestion());
                 }
             }
@@ -161,18 +169,24 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View view) {
                 if (!isClickAudience && !isSelect) {
-                    isClickAudience = true;
                     ivAudience.setImageResource(R.drawable.hoikhangia1);
-                    int percentArr[] = gameHelper.audienceHelper();
-                    Intent intent = new Intent(MainActivity.this, AudienceHelpActivity.class);
-                    intent.putExtra("percentArr", percentArr);
-                    if (mediaPlayer.isPlaying()) {
-                        mediaPlayer.stop();
-                    }
-                    mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.khangia);
-                    mediaPlayer.start();
-                    while (mediaPlayer.getCurrentPosition() < mediaPlayer.getDuration() - DELAY_AUDIO_TIME);
-                    startActivity(intent);
+                    isClickAudience = true;
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            int percentArr[] = gameHelper.audienceHelper();
+                            final Intent intent = new Intent(MainActivity.this, AudienceHelpActivity.class);
+                            intent.putExtra("percentArr", percentArr);
+                            createNewMedia(R.raw.khangia);
+                            delay();
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    startActivity(intent);
+                                }
+                            });
+                        }
+                    }).start();
                 }
             }
         });
@@ -183,16 +197,22 @@ public class MainActivity extends Activity {
                 if (!isClickRelative && !isSelect) {
                     ivRelative.setImageResource(R.drawable.nguoithan2);
                     isClickRelative = true;
-                    int caseRelative = gameHelper.relativeHelper();
-                    Intent mIntent = new Intent(MainActivity.this, RelativeActivity.class);
-                    mIntent.putExtra("caseRelative", caseRelative);
-                    if (mediaPlayer.isPlaying()) {
-                        mediaPlayer.stop();
-                    }
-                    mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.goinguoithan);
-                    mediaPlayer.start();
-                    while (mediaPlayer.getCurrentPosition() < mediaPlayer.getDuration() - DELAY_AUDIO_TIME);
-                    startActivity(mIntent);
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            int caseRelative = gameHelper.relativeHelper();
+                            final Intent mIntent = new Intent(MainActivity.this, RelativeActivity.class);
+                            mIntent.putExtra("caseRelative", caseRelative);
+                            createNewMedia(R.raw.goinguoithan);
+                            delay();
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    startActivity(mIntent);
+                                }
+                            });
+                        }
+                    }).start();
                 }
             }
         });
@@ -208,86 +228,37 @@ public class MainActivity extends Activity {
                     // thay đổi nền đáp án đã chọn
                     rlCase.setBackgroundResource(R.drawable.select);
                     stop = true;
-                    // dừng nếu nhạc đang phát
-                    // chọn nhạc để phát khi người đã chọn đáp án
-                    switch (caseSelect) {
-                        case CommonVLs.CASE_A:
-                            mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.da);
-                            break;
-                        case CommonVLs.CASE_B:
-                            mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.db);
-                            break;
-                        case CommonVLs.CASE_C:
-                            mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.dc);
-                            break;
-                        case CommonVLs.CASE_D:
-                            mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.dd);
-                            break;
-                    }
-                    if (mediaPlayer.isPlaying()) {
-                        mediaPlayer.stop();
-                    }
-                    // phát nhạc chọn đáp án
-                    mediaPlayer.start();
-
                     // thiết lập là đã có đáp án được chọn, không cho chọn thêm
                     isSelect = true;
                     // kiem tra dap an dung hay sai
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
-                            // Tam dung de phat nhac, tạo hồi hộp
-                            while (mediaPlayer.getCurrentPosition() <= mediaPlayer.getDuration()-DELAY_AUDIO_TIME);
+                            switch (caseSelect) {
+                                case CommonVLs.CASE_A:
+                                    createNewMedia(R.raw.da);
+                                    break;
+                                case CommonVLs.CASE_B:
+                                    createNewMedia(R.raw.db);
+                                    break;
+                                case CommonVLs.CASE_C:
+                                    createNewMedia(R.raw.dc);
+                                    break;
+                                case CommonVLs.CASE_D:
+                                    createNewMedia(R.raw.dd);
+                                    break;
+                            }
+                            delay();
                             // phát nhạc đưa ra đáp án
                             if (new Random().nextInt(2) == 0) {
-                                mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.now1);
+                                createNewMedia(R.raw.now1);
                             } else {
-                                mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.now2);
+                                createNewMedia(R.raw.now2);
                             }
-                            if (mediaPlayer.isPlaying()) {
-                                mediaPlayer.stop();
-                            }
-                            mediaPlayer.start();
-                            while (mediaPlayer.getCurrentPosition() <= mediaPlayer.getDuration()-DELAY_AUDIO_TIME);
+                            delay();
+
                             // NGười chơi chọn đúng đáp án
                             if (gameHelper.checkTrueCase(caseSelect)) {
-                                mediaPlayer.stop();
-                                switch (caseSelect) {
-                                    case CommonVLs.CASE_A:
-                                        mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.true_a);
-                                        break;
-                                    case CommonVLs.CASE_B:
-                                        mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.true_b);
-                                        break;
-                                    case CommonVLs.CASE_C:
-                                        mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.true_c);
-                                        break;
-                                    case CommonVLs.CASE_D:
-                                        mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.true_d);
-                                        break;
-                                }
-                                if (mediaPlayer.isPlaying()) {
-                                    mediaPlayer.stop();
-                                }
-                                mediaPlayer.start();
-                                if (gameHelper.getLevel() == 14) {
-                                    while (mediaPlayer.getCurrentPosition() < mediaPlayer.getDuration() - DELAY_AUDIO_TIME);
-                                    mediaPlayer.stop();
-                                    mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.pass_14);
-                                    if (mediaPlayer.isPlaying()) {
-                                        mediaPlayer.stop();
-                                    }
-                                    mediaPlayer.start();
-                                }
-                                if (gameHelper.getLevel() == 15) {
-                                    while (mediaPlayer.getCurrentPosition() < mediaPlayer.getDuration() - DELAY_AUDIO_TIME);
-                                    mediaPlayer.stop();
-                                    mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.pass_15);
-                                    if (mediaPlayer.isPlaying()) {
-                                        mediaPlayer.stop();
-                                    }
-                                    mediaPlayer.start();
-                                }
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
@@ -298,57 +269,83 @@ public class MainActivity extends Activity {
                                         myAnim.fadeIn(listenSelectTrue, rlCase);
                                     }
                                 });
+                                switch (caseSelect) {
+                                    case CommonVLs.CASE_A:
+                                        createNewMedia(R.raw.true_a);
+                                        break;
+                                    case CommonVLs.CASE_B:
+                                        createNewMedia(R.raw.true_b);
+                                        break;
+                                    case CommonVLs.CASE_C:
+                                        createNewMedia(R.raw.true_c);
+                                        break;
+                                    case CommonVLs.CASE_D:
+                                        createNewMedia(R.raw.true_d);
+                                        break;
+                                }
+                                delay();
+                                if (gameHelper.getLevel() == 14) {
+                                    createNewMedia(R.raw.pass_14);
+                                }
+                                if (gameHelper.getLevel() == 15) {
+                                    createNewMedia(R.raw.pass_15);
+                                }
                             }
                             // Người chơi chọn sai đáp án
                             else {
+                                RelativeLayout rlCaseTrue = null;
+                                switch (gameHelper.getTrueCase()) {
+                                    case CommonVLs.CASE_A:
+                                        rlCaseTrue = rlCaseA;
+                                        break;
+                                    case CommonVLs.CASE_B:
+                                        rlCaseTrue = rlCaseB;
+                                        break;
+                                    case CommonVLs.CASE_C:
+                                        rlCaseTrue = rlCaseC;
+                                        break;
+                                    case CommonVLs.CASE_D:
+                                        rlCaseTrue = rlCaseD;
+                                        break;
+                                }
+                                final RelativeLayout finalRlCaseTrue = rlCaseTrue;
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
-                                        RelativeLayout rlCaseTrue = null;
-                                        switch (gameHelper.getTrueCase()) {
-                                            case CommonVLs.CASE_A:
-                                                rlCaseTrue = rlCaseA;
-                                                break;
-                                            case CommonVLs.CASE_B:
-                                                rlCaseTrue = rlCaseB;
-                                                break;
-                                            case CommonVLs.CASE_C:
-                                                rlCaseTrue = rlCaseC;
-                                                break;
-                                            case CommonVLs.CASE_D:
-                                                rlCaseTrue = rlCaseD;
-                                                break;
-                                        }
-                                        switch (gameHelper.getTrueCase()) {
-                                            case CommonVLs.CASE_A:
-                                                mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.lose_a);
-                                                break;
-                                            case CommonVLs.CASE_B:
-                                                mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.lose_b);
-                                                break;
-                                            case CommonVLs.CASE_C:
-                                                mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.lose_c);
-                                                break;
-                                            case CommonVLs.CASE_D:
-                                                mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.lose_d);
-                                                break;
-                                        }
-                                        if (mediaPlayer.isPlaying()) {
-                                            mediaPlayer.stop();
-                                        }
-                                        mediaPlayer.start();
                                         rlCase.setBackgroundResource(R.drawable.selectfalse);
-                                        rlCaseTrue.setBackgroundResource(R.drawable.selecttrue);
-                                        myAnim.fadeIn(listenSelectFalse, rlCaseTrue);
+                                        finalRlCaseTrue.setBackgroundResource(R.drawable.selecttrue);
+                                        myAnim.fadeIn(listenSelectFalse, finalRlCaseTrue);
                                         myAnim.fadeIn(listenSelectFalse, rlCase);
                                     }
                                 });
+                                switch (gameHelper.getTrueCase()) {
+                                    case CommonVLs.CASE_A:
+                                        createNewMedia(R.raw.lose_a);
+                                        break;
+                                    case CommonVLs.CASE_B:
+                                        createNewMedia(R.raw.lose_b);
+                                        break;
+                                    case CommonVLs.CASE_C:
+                                        createNewMedia(R.raw.lose_c);
+                                        break;
+                                    case CommonVLs.CASE_D:
+                                        createNewMedia(R.raw.lose_d);
+                                        break;
+                                }
                             }
                         }
                     }).start();
                 }
             }
         });
+    }
+
+    private void delay() {
+        try {
+            Thread.sleep(mediaPlayer.getDuration() - DELAY_AUDIO_TIME);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     private class AnimListenerWhenSelectTrue implements Animation.AnimationListener {
@@ -362,51 +359,12 @@ public class MainActivity extends Activity {
         public void onAnimationEnd(Animation animation) {
             setColorLevel(gameHelper.getLevel());
             setColorDefaultForCase();
-            if (mediaPlayer.isPlaying()) {
-                mediaPlayer.stop();
-            }
             setQuestion(gameHelper.getNextQuestion());
-            Toast.makeText(getApplicationContext(), gameHelper.getTrueCase() + "", Toast.LENGTH_SHORT).show();
-            switch (gameHelper.getLevel()) {
-                case 1: mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.hoi1);
-                    break;
-                case 2: mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.hoi2);
-                    break;
-                case 3: mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.hoi3);
-                    break;
-                case 4: mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.hoi4);
-                    break;
-                case 5: mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.hoi5);
-                    break;
-                case 6: mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.hoi6);
-                    break;
-                case 7: mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.hoi7);
-                    break;
-                case 8: mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.hoi8);
-                    break;
-                case 9: mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.hoi9);
-                    break;
-                case 10: mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.hoi10);
-                    break;
-                case 11: mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.hoi11);
-                    break;
-                case 12: mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.hoi12);
-                    break;
-                case 13: mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.hoi13);
-                    break;
-                case 14: mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.hoi14);
-                    break;
-                case 15: mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.hoi15);
-                    break;
-            }
-            mediaPlayer.start();
+
+            setAudioNewQuestion();
             if (gameHelper.getLevel() == 5 || gameHelper.getLevel() == 10) {
-                while (mediaPlayer.getCurrentPosition() < mediaPlayer.getDuration() - DELAY_AUDIO_TIME);
-                if (mediaPlayer.isPlaying()) {
-                    mediaPlayer.stop();
-                }
-                mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.quantrong);
-                mediaPlayer.start();
+                delay();
+                createNewMedia(R.raw.quantrong);
             }
             time = START_TIME_COUNT;
             stop = false;
@@ -416,9 +374,61 @@ public class MainActivity extends Activity {
         public void onAnimationRepeat(Animation animation) {
 
         }
+
+    }
+
+    private void setAudioNewQuestion() {
+        switch (gameHelper.getLevel()) {
+            case 1:
+                createNewMedia(R.raw.hoi1);
+                break;
+            case 2:
+                createNewMedia(R.raw.hoi2);
+                break;
+            case 3:
+                createNewMedia(R.raw.hoi3);
+                break;
+            case 4:
+                createNewMedia(R.raw.hoi4);
+                break;
+            case 5:
+                createNewMedia(R.raw.hoi5);
+                break;
+            case 6:
+                createNewMedia(R.raw.hoi6);
+                break;
+            case 7:
+                createNewMedia(R.raw.hoi7);
+                break;
+            case 8:
+                createNewMedia(R.raw.hoi8);
+                break;
+            case 9:
+                createNewMedia(R.raw.hoi9);
+                break;
+            case 10:
+                createNewMedia(R.raw.hoi10);
+                break;
+            case 11:
+                createNewMedia(R.raw.hoi11);
+                break;
+            case 12:
+                createNewMedia(R.raw.hoi12);
+                break;
+            case 13:
+                createNewMedia(R.raw.hoi13);
+                break;
+            case 14:
+                createNewMedia(R.raw.hoi14);
+                break;
+            case 15:
+                createNewMedia(R.raw.hoi15);
+                break;
+        }
     }
 
     private void countTime() {
+        time = START_TIME_COUNT;
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -466,19 +476,29 @@ public class MainActivity extends Activity {
         public void onAnimationRepeat(Animation animation) {
 
         }
+
+    }
+
+    private void createNewMedia(int idMedia) {
+        mediaPlayer.release();
+        mediaPlayer = new MediaPlayer();
+        mediaPlayer = MediaPlayer.create(getApplicationContext(), idMedia);
+        mediaPlayer.start();
     }
 
     private void questionPlayContinueDialog() {
         stop = true;
+        pref = getSharedPreferences("rank", MODE_PRIVATE);
+        gameHelper.saveMark(pref);
         AlertDialog dialog = new AlertDialog.Builder(MainActivity.this)
                 .setMessage("Bạn có muốn chơi lại không???")
                 .setNegativeButton("Có", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        newGame(gameHelper.getFirstQuestion());
                         if (time <= 0) {
                             countTime();
-                        }
+                        } else time = START_TIME_COUNT;
+                        newGame(gameHelper.getFirstQuestion());
                     }
                 })
                 .setPositiveButton("Không", new DialogInterface.OnClickListener() {
@@ -492,10 +512,26 @@ public class MainActivity extends Activity {
 
     private void setQuestion(Question question) {
         tvQuestion.setText(question.getQuestion());
-        tvCaseA.setText("A. " + question.getCaseA());
-        tvCaseB.setText("B. " + question.getCaseB());
-        tvCaseC.setText("C. " + question.getCaseC());
-        tvCaseD.setText("D. " + question.getCaseD());
+        if (question.getCaseA().equals("")) {
+            tvCaseA.setText("");
+        } else {
+            tvCaseA.setText("A. " + question.getCaseA());
+        }
+        if (question.getCaseB().equals("")) {
+            tvCaseB.setText("");
+        } else {
+            tvCaseB.setText("B. " + question.getCaseB());
+        }
+        if (question.getCaseC().equals("")) {
+            tvCaseC.setText("");
+        } else {
+            tvCaseC.setText("C. " + question.getCaseC());
+        }
+        if (question.getCaseD().equals("")) {
+            tvCaseD.setText("");
+        } else {
+            tvCaseD.setText("D. " + question.getCaseD());
+        }
     }
 
     public void setColorForNewGame() {

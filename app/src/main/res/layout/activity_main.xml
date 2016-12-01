@@ -176,7 +176,7 @@
             android:layout_weight="1"
             android:background="@android:color/holo_green_dark"
             android:gravity="center"
-            android:text="15"
+            android:text="@string/level_fifty"
             android:textColor="@color/white" />
 
         <TextView
@@ -185,7 +185,7 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="14"
+            android:text="@string/level_fourteen"
             android:textColor="@color/white" />
 
         <TextView
@@ -194,7 +194,7 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="13"
+            android:text="@string/thirteen"
             android:textColor="@color/white" />
 
         <TextView
@@ -203,7 +203,7 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="12"
+            android:text="@string/level_twelty"
             android:textColor="@color/white" />
 
         <TextView
@@ -212,7 +212,7 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="11"
+            android:text="@string/level_elevent"
             android:textColor="@color/white" />
 
         <TextView
@@ -222,7 +222,7 @@
             android:layout_weight="1"
             android:background="@android:color/holo_green_dark"
             android:gravity="center"
-            android:text="10"
+            android:text="@string/level_ten"
             android:textColor="@color/white" />
 
         <TextView
@@ -231,7 +231,7 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="9"
+            android:text="@string/level_nine"
             android:textColor="@color/white" />
 
         <TextView
@@ -240,7 +240,7 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="8"
+            android:text="@string/level_eight"
             android:textColor="@color/white" />
 
         <TextView
@@ -249,7 +249,7 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="7"
+            android:text="@string/level_sevent"
             android:textColor="@color/white" />
 
         <TextView
@@ -258,7 +258,7 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="6"
+            android:text="@string/level_six"
             android:textColor="@color/white" />
 
         <TextView
@@ -268,7 +268,7 @@
             android:layout_weight="1"
             android:background="@android:color/holo_green_dark"
             android:gravity="center"
-            android:text="5"
+            android:text="@string/level_five"
             android:textColor="@color/white" />
 
         <TextView
@@ -277,7 +277,7 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="4"
+            android:text="@string/level_four"
             android:textColor="@color/white" />
 
         <TextView
@@ -286,7 +286,7 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="3"
+            android:text="@string/level_three"
             android:textColor="@color/white" />
 
         <TextView
@@ -295,7 +295,7 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="2"
+            android:text="@string/level_two"
             android:textColor="@color/white" />
 
         <TextView
@@ -317,6 +317,6 @@
         android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
         android:scaleType="centerCrop"
-        android:src="@drawable/suy_nghi" />
+        android:src="@drawable/suyluan" />
 
 </RelativeLayout>

@@ -21,12 +21,18 @@
             android:name=".MainActivity"
             android:screenOrientation="landscape" />
 
-        <activity android:name=".AudienceHelpActivity"
-            android:screenOrientation="landscape"/>
-        <activity android:name=".RelativeActivity"
-            android:screenOrientation="landscape"/>
-        <activity android:name=".ShowCaseRelativeActivity"
-            android:screenOrientation="landscape"/>
+        <activity
+            android:name=".activity_helper.AudienceHelpActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".activity_helper.RelativeActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".activity_helper.ShowCaseRelativeActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".RankActivity"
+            android:screenOrientation="landscape" />
     </application>
 
 </manifest>

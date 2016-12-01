@@ -1,11 +1,12 @@
-package com.uet.trungthao.ailatrieuphu;
+package com.uet.trungthao.ailatrieuphu.activity_helper;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.Toast;
+
+import com.uet.trungthao.ailatrieuphu.R;
 
 /**
  * Created by JiH on 14/10/2016.
